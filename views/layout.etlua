@@ -1,0 +1,91 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><%= page_title or "Pasfa" %></title>
+    <link rel="stylesheet" href="/static/terminal.css" />
+    <style>
+    :root {
+        --global-font-size: 15px;
+        --global-line-height: 1.4em;
+        --global-space: 10px;
+        --font-stack: Menlo, Monaco, Lucida Console, Liberation Mono,
+        DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace,
+        serif;
+        --mono-font-stack: Menlo, Monaco, Lucida Console, Liberation Mono,
+        DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace,
+        serif;
+        --background-color: rgb(40, 42, 54);
+        --page-width: 80em;
+        --font-color: #e8e9ed;
+        --invert-font-color: #222225;
+        --secondary-color: #a3abba;
+        --tertiary-color: #a3abba;
+        --primary-color: #62c4ff;
+        --error-color: #ff3c74; */
+        --progress-bar-background: #3f3f44;
+        --progress-bar-fill: #62c4ff;
+        --code-bg-color: #3f3f44;
+        --input-style: solid;
+        --display-h1-decoration: none;
+    }
+    
+    .terminal-prompt::after {
+      display: none;
+    }
+    
+    .tippy-content > nav > ul {
+      margin-top: unset;
+      margin-bottom: unset;
+    }
+    </style>
+</head>
+<body class="terminal">
+    <div class="container">
+        <div class="terminal-nav">
+            <header class="terminal-logo">
+                <div class="logo terminal-prompt"><a href="/" class="no-style">Pasfa - Paste Faust code!</a></div>
+            </header>
+            <nav class="terminal-menu">
+                <ul vocab="https://schema.org/" typeof="BreadcrumbList">
+                    <li property="itemListElement" typeof="ListItem"><a href="/new" property="item" typeof="WebPage" class="menu-item"><span property="name">New</span></a><meta property="position" content="1"></li>
+                    <li property="itemListElement" typeof="ListItem"><a href="/examples" property="item" typeof="WebPage" class="menu-item"><span property="name">Examples</span></a><meta property="position" content="1"></li>
+                    <li property="itemListElement" typeof="ListItem"><a id="libraries-dropdown" href="#" property="item" typeof="WebPage" class="menu-item"><span property="name">Libraries</span></a><meta property="position" content="1"></li>
+                </ul>
+            </nav>
+        </div>
+    </div>  
+    <div class="container">
+        <% content_for("inner") %>
+    </div>
+    <div class="container">
+    <hr>
+    <footer>
+        <p>
+            Copyright 2023 SL - This is experimental unfinished software! - <a href="https://github.com/Simon-L/pasfa">Source on github</a>
+        </p>
+    </footer>
+    </div>
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://unpkg.com/tippy.js@6"></script>
+    <script>
+        let cont = `<nav>
+            <ul>
+                <% for i, pa in pairs(require("pasfa").libraries()) do %>
+                    <li><a href="/<%= pa.shortid %>"><%= pa.name %></a></li>
+                <% end %>
+            </ul>
+        </nav>`
+        
+        tippy('#libraries-dropdown', {
+            content: cont,
+            arrow: false,
+            animation: false,
+            allowHTML: true,
+            interactive: true,
+            appendTo: () => document.body,
+        });
+    </script>
+<script src="/static/faust-web-component.js"></script>
+</body>
+</html>

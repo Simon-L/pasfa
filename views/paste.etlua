@@ -1,0 +1,20 @@
+<h2><%= name %> - <i>posted <%= ago %></i></h2>
+<faust-editor-basic id="code-editor" passive min-height='600px'>
+<!--<%- content %>-->
+</faust-editor-basic>
+<br>
+<a id="repaste" class="btn btn-default" onClick="prepare()" href="#">Repaste</a>
+<script type="text/javascript">
+    function base64url(str) {
+        return btoa(str).replace(/=+$/,'').replace(/\+/g,'-').replace(/\//g,'_');
+    }
+    function unbase64url(str) {
+        return atob(str.replace(/-/g,'+').replace(/_/g,'/'));
+    }
+    
+    function prepare() {
+        let editor = document.getElementById("code-editor");
+        let repaste = document.getElementById("repaste");
+        repaste.href = "/new?inline=" + base64url(editor.getCodeString())
+    }
+</script>

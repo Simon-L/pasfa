@@ -1,0 +1,7 @@
+<ol class="terminal-toc">
+    <h1>Faust Examples</h1>
+    <p>Taken from  <a href="https://github.com/grame-cncm/faust/tree/master-dev/examples">Faust repository</a></p>
+    <% for i, pa in pairs(examples) do %>
+        <li><a href="/<%= pa.shortid %>"><%= pa.category %> / <%= pa.name %></a></li>
+    <% end %>
+</ol>

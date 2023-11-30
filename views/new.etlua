@@ -1,0 +1,48 @@
+<style media="screen">
+    #pond {
+      display: flex;
+      justify-content: space-between;
+    }
+</style>
+<faust-editor-basic id="code-editor" min-height='600px'>
+</faust-editor-basic>
+<br>
+<form onsubmit="prepare()" action="/paste" method="post" enctype="multipart/form-data">
+    <fieldset>
+        <legend>Infos</legend>
+      <div id="pond">
+      <div class="form-group">
+        <label for="name">Name:</label>
+        <input id="name" name="name" type="text" minlength="2" size="40" value="untitled.dsp">
+      </div>
+      <div class="form-group" style="padding-top:1em;">
+        <label for="file">Paste file:</label>
+        <input class="btn btn-default btn-ghost" type="file" name="file" id="file"/>
+      </div>
+      <div class="form-group" style="padding-top:1.2em;">
+          <button class="btn btn-default" type="submit" role="button" name="submit" id="submit">Submit</button>
+      </div>
+      <textarea type="text" id="code-input" name="code-input" hidden value=""></textarea>
+      <input name="csrf_token" hidden value="<%= csrf_token %>"/>
+      </div>
+      <small>Note: If a file is selected for upload, name and editor will be ignored. <b>Links expire after <%= config.expiry[1] %> <%= config.expiry[2] %>.</b></small>
+    </fieldset>
+  </form>
+<script type="text/javascript">
+    function base64url(str) {
+        return btoa(str).replace(/=+$/,'').replace(/\+/g,'-').replace(/\//g,'_');
+    }
+    function unbase64url(str) {
+        return atob(str.replace(/-/g,'+').replace(/_/g,'/'));
+    }
+    window.addEventListener("load", (event) => {
+        let editor = document.getElementById("code-editor");
+        let code = new URL(window.location.href).searchParams.get("inline")
+        if (code != null) editor.setCode(unbase64url(code));
+    });
+    
+    function prepare() {
+        const editor = document.getElementById("code-editor");
+        const codeInput = document.getElementById("code-input").value = editor.getCodeString();
+    }
+</script>
