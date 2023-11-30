@@ -6,11 +6,7 @@ local os = require"os"
 local colors = require("ansicolors")
 local inspect = require("inspect")
 
-local Pastes = require "pasfa".Pastes
-local paste = require "pasfa".paste
-local get = require "pasfa".get
-local examples = require "pasfa".examples
-local libraries = require "pasfa".libraries
+local pasfa = require "pasfa"
 
 app:enable("etlua")
 app.layout = require "views.layout"
@@ -24,7 +20,7 @@ function app:handle_404()
 end
 
 app:get("/examples", function(self)
-    self.examples = examples()
+    self.examples = pasfa.examples()
     return { render = "examples" }
 end)
 
@@ -39,14 +35,14 @@ app:post("/paste", function(self)
         return { redirect_to = self:url_for("new") }
     end
     if ((self.params.file.filename ~= "") and (self.params.file.content ~= "")) then
-        local pa = paste(self.params.file.filename, self.params.file.content, {})
+        local pa = pasfa.paste(self.params.file.filename, self.params.file.content, {})
         if pa ~= nil then
             return { redirect_to = "/" .. pa.shortid }
         else
             return { redirect_to = self:url_for("new") }
         end
     elseif ((self.params.name ~= "") and (self.params["code-input"] ~= "")) then
-        local pa = paste(self.params.name, self.params["code-input"], {})
+        local pa = pasfa.paste(self.params.name, self.params["code-input"], {})
         if pa ~= nil then
             return { redirect_to = "/" .. pa.shortid }
         else
@@ -58,7 +54,7 @@ app:post("/paste", function(self)
 end)
 
 app:get("shortid", "/:shortid", function(self)
-    local p = get(self.params.shortid)
+    local p = pasfa.get(self.params.shortid)
     if (p == nil) then return app:handle_404() end
     self.content = p.content
     self.name = p.name
@@ -67,7 +63,7 @@ app:get("shortid", "/:shortid", function(self)
 end)
 
 app:get("/raw/:shortid", function(self)
-    local p = get(self.params.shortid)
+    local p = pasfa.get(self.params.shortid)
     if (p == nil) then return { status = 404, layout = false } end
     return {p.content, layout = false}
 end)

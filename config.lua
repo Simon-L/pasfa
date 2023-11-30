@@ -9,5 +9,5 @@ config("development", {
   },
   secret = "correcthorsebatterystaple",
   expiry = {"15", "minutes"},
-  interval = {"15", "seconds"},
+  interval = {"5", "seconds"},
 })

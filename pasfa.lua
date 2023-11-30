@@ -38,7 +38,8 @@ function Pastes_mt:print()
   print("meta:", self.meta)
 end
 
-function config_to_date(field)
+local config_to_date
+config_to_date = function (field)
     if (stringx.startswith(field[2], "hour")) then
         return date({hour = field[1]})
     elseif (stringx.startswith(field[2], "day")) then
@@ -50,15 +51,18 @@ function config_to_date(field)
     end
 end
 
-function expiry_date()
+local expiry_date
+expiry_date = function ()
     return config_to_date(config.expiry)
 end
 
-function interval_date()
+local interval_date
+interval_date = function ()
     return config_to_date(config.interval)
 end
 
-function delete_paste(pid)
+local delete_paste
+delete_paste = function (pid)
     local pa = Pastes:find(pid)
     if pa == nil then return end
     pa:delete()
@@ -66,7 +70,51 @@ function delete_paste(pid)
     print("Deleted " .. pid)
 end
 
-function delete_expired()
+local examples_pids
+examples_pids = function()
+    local ex = Meta:find("examples_pids")
+    local pids = from_json(ex.value)
+    return pids[1], pids[2]
+end
+
+local libraries_pids
+libraries_pids = function()
+    local ex = Meta:find("libraries_pids")
+    local pids = from_json(ex.value)
+    return pids[1], pids[2]
+end
+
+local examples
+examples = function ()
+    local first, last = examples_pids()
+    local res1 = db.query("SELECT * FROM pasfa_pastes WHERE ((pid > ?) AND (pid < ?))", first, last)
+    for i,e in ipairs(res1) do
+        e.meta = from_json(e.meta)
+        e.category = stringx.join(' / ', e.meta.category)
+    end
+    return res1
+end
+
+local libraries
+libraries = function ()
+    local first, last = libraries_pids()
+    local res1 = db.query("SELECT * FROM pasfa_pastes WHERE ((pid > ?) AND (pid < ?))", first, last)
+    for i,e in ipairs(res1) do
+        e.meta = from_json(e.meta)
+    end
+    return res1
+end
+
+
+local is_expired
+is_expired = function (_date)
+    local d = date.diff(_date, date(true)):spanminutes()
+    print("remaining " .. string.format("%2.2f", math.max(0.0, d)) .. " minutes", " | now: ", tostring(date(true)), " target: ", tostring(_date), " ", (d < 0.0 and "will expire" or "still living"))
+    return d < 0.0
+end
+
+local delete_expired
+delete_expired = function ()
     local _, last = examples_pids()
     local res1 = Pastes:select("WHERE (pid > ?)", last)
     for i,pa in ipairs(res1) do
@@ -77,13 +125,8 @@ function delete_expired()
     end
 end
 
-function is_expired(_date)
-    local d = date.diff(_date, date(true)):spanminutes()
-    print("remaining " .. string.format("%2.2f", math.max(0.0, d)) .. " minutes", " | now: ", tostring(date(true)), " target: ", tostring(_date), " ", (d < 0.0 and "will expire" or "still living"))
-    return d < 0.0
-end
-
-function get(shortid)
+local get
+get = function (shortid)
     local short = Shortids:find(shortid)
     if (short == nil) then
         return nil
@@ -91,7 +134,8 @@ function get(shortid)
     return Pastes:find(short.pid)
 end
 
-function paste(name, content, meta)
+local paste
+paste = function(name, content, meta)
     local req = "SELECT (1000 * unixepoch('subsecond')) as ms, datetime('now') as datetime;"
     local res = db.query(req)
     local ms = tonumber(res[1].ms)
@@ -116,37 +160,6 @@ function paste(name, content, meta)
     })
     assert(short.shortid == pa.shortid)
     return pa
-end
-
-function examples_pids()
-    local ex = Meta:find("examples_pids")
-    local pids = from_json(ex.value)
-    return pids[1], pids[2]
-end
-
-function libraries_pids()
-    local ex = Meta:find("libraries_pids")
-    local pids = from_json(ex.value)
-    return pids[1], pids[2]
-end
-
-function examples()
-    local first, last = examples_pids()
-    local res1 = db.query("SELECT * FROM pasfa_pastes WHERE ((pid > ?) AND (pid < ?))", first, last)
-    for i,e in ipairs(res1) do
-        e.meta = from_json(e.meta)
-        e.category = stringx.join(' / ', e.meta.category)
-    end
-    return res1
-end
-
-function libraries()
-    local first, last = libraries_pids()
-    local res1 = db.query("SELECT * FROM pasfa_pastes WHERE ((pid > ?) AND (pid < ?))", first, last)
-    for i,e in ipairs(res1) do
-        e.meta = from_json(e.meta)
-    end
-    return res1
 end
 
 return {

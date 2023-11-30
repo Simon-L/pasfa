@@ -27,6 +27,11 @@ RUN luarocks build --only-deps ./pasfa-dev-1.rockspec
 RUN git clone https://github.com/grame-cncm/faust /root/work/faust
 RUN cd /root/work/faust && git submodule update --init libraries
 
-RUN resty scripts/init.lua /root/work/faust
- 
-RUN lapis exec "print('Ready!')"
+RUN echo "#! /bin/bash\n" \
+    "resty scripts/init.lua /root/work/faust\n" \
+    "luajit -e \"print'Ready!'\"\n" \
+    "lapis server\n" > /root/work/entrypoint.sh
+    
+RUN chmod +x /root/work/entrypoint.sh
+
+CMD ["/root/work/entrypoint.sh"]
