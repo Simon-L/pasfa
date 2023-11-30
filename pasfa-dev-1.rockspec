@@ -8,7 +8,7 @@ source = {
 description = {
   summary = "Lapis Application",
   homepage = "",
-  license = ""
+  license = "MIT"
 }
 
 dependencies = {
