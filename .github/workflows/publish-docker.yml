@@ -27,7 +27,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Test the Docker image
-        run: docker run --name my_pasfa -p 8080:8080 -it pasfa:latest
+        run: docker run --name my_pasfa -p 8080:8080 pasfa:latest
   push_to_registry:
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
@@ -55,6 +55,6 @@ jobs:
         with:
           context: "{{defaultContext}}"
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: fergusl2/pasfa:latest
           labels: ${{ steps.meta.outputs.labels }}
 
