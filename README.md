@@ -6,9 +6,11 @@
 
 Recommended to use with docker. Here's how to:
 ```sh
-docker build -t pasfa .
+docker pull fergusl2/pasfa:latest
 docker run --name my_pasfa -p 8080:8080 -it pasfa:latest
 ```
+
+If you prefer building, then the usual `docker build -t pasfa .` will do.
 
 #### Configuration
 
