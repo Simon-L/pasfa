@@ -21,7 +21,9 @@ jobs:
         - name: Build and test the Docker image
           run: |
             docker build -t pasfa-test .
-            docker run --name my_pasfa -p 8080:8080 pasfa-test:latest
+            docker run --name test -p 8080:8080 -d pasfa-test:latest
+            sleep 60
+            docker stop test
       
   push_to_registry:
     name: Push Docker image to Docker Hub
