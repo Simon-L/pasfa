@@ -14,20 +14,19 @@ env:
 
 jobs:
 
-  build:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: docker build -t pasfa .
-  test:
+  build_and_test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Build the Docker image
+        uses: actions/checkout@v3
+        with:
+          run: docker build -t pasfa-test .
+          
       - name: Test the Docker image
-        run: docker run --name my_pasfa -p 8080:8080 pasfa:latest
+        uses: actions/checkout@v2
+        with:
+          run: docker run pasfa-test:latest
+      
   push_to_registry:
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
