@@ -43,7 +43,7 @@ config_to_date = function (field)
     if (stringx.startswith(field[2], "hour")) then
         return date({hour = field[1]})
     elseif (stringx.startswith(field[2], "day")) then
-        return date({day = field[1]})
+        return date({hour = field[1] * 24}) -- day needs date, workaround to use hours, 24hrs == 1day
     elseif (stringx.startswith(field[2], "minute")) then
         return date({min = field[1]})
     elseif (stringx.startswith(field[2], "sec")) then
