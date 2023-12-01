@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
         - uses: actions/checkout@v3
-          name: Build and test the Docker image
+        - name: Build and test the Docker image
           run: |
             docker build -t pasfa-test .
             docker run --name my_pasfa -p 8080:8080 pasfa-test:latest
