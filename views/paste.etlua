@@ -1,7 +1,18 @@
-<h2><%= name %> - <i>posted <%= ago %></i></h2>
-<faust-editor-basic id="code-editor" passive min-height='600px'>
+<%
+local el = dsp and "faust-editor" or "faust-editor-basic" 
+local passive = dsp and "" or "passive"
+%>
+<h2><%= name %> - <i>posted <%= ago %></i>
+    <% if not dsp then %>
+    - <a href="/<%= shortid %>?dsp">Reopen with DSP</a>
+    <% else %>
+    - <a href="/<%= shortid %>">Reopen without DSP</a>
+    <% end %>
+</h2>
+    <!-- <%= passive %>  -->
+<<%= el %> id="code-editor" min-height='600px'>
 <!--<%- content %>-->
-</faust-editor-basic>
+</<%= el %>>
 <br>
 <a id="repaste" class="btn btn-default" onClick="prepare()" href="#">Repaste</a>
 <script type="text/javascript">

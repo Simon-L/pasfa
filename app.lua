@@ -56,8 +56,11 @@ end)
 app:get("shortid", "/:shortid", function(self)
     local p = pasfa.get(self.params.shortid)
     if (p == nil) then return app:handle_404() end
+    local dsp = self.params.dsp and true or false
     self.content = p.content
     self.name = p.name
+    self.dsp = dsp
+    self.shortid = p.shortid
     self.ago = require("lapis.util").time_ago_in_words(p.created_at)
     return { render = "paste" }
 end)
@@ -66,6 +69,16 @@ app:get("/raw/:shortid", function(self)
     local p = pasfa.get(self.params.shortid)
     if (p == nil) then return { status = 404, layout = false } end
     return {p.content, layout = false}
+end)
+
+app:get("/admin", function(self)
+    if ngx.var.remote_addr ~= "127.0.0.1" then
+        return { status = 404, layout = false }
+    else
+        local paginated = pasfa.Pastes:paginated([[]], 100)
+        self.paginated = paginated
+        return { render = "admin" }
+    end
 end)
 
 return app
