@@ -34,6 +34,16 @@
     .terminal-prompt::after {
       display: none;
     }
+
+    div.logo.warning::before {
+        content: "";
+    }
+    
+    div.logo.warning {
+        font-size: calc(var(--global-font-size) * 0.8);
+        color: var(--error-color);
+        padding-left: calc(var(--global-space) * 4);
+    }
     
     .tippy-content > nav > ul {
       margin-top: unset;
@@ -46,6 +56,7 @@
         <div class="terminal-nav">
             <header class="terminal-logo">
                 <div class="logo terminal-prompt"><a href="/" class="no-style">Pasfa - Paste Faust code!</a></div>
+                <% if require("lapis.config").get().testing then %><div class="logo terminal-prompt warning">Warning! This is a demo instance subject to frequent resets!</div><% end %>
             </header>
             <nav class="terminal-menu">
                 <ul vocab="https://schema.org/" typeof="BreadcrumbList">

@@ -10,4 +10,5 @@ config("development", {
   secret = "correcthorsebatterystaple",
   expiry = {"15", "minutes"},
   interval = {"5", "seconds"},
+  testing = true
 })
