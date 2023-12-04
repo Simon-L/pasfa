@@ -56,10 +56,10 @@ end)
 app:get("shortid", "/:shortid", function(self)
     local p = pasfa.get(self.params.shortid)
     if (p == nil) then return app:handle_404() end
-    local dsp = self.params.dsp and true or false
+    local nodsp = self.params.nodsp and true or false
     self.content = p.content
     self.name = p.name
-    self.dsp = dsp
+    self.nodsp = nodsp
     self.shortid = p.shortid
     self.ago = require("lapis.util").time_ago_in_words(p.created_at)
     return { render = "paste" }

@@ -1,16 +1,14 @@
 <%
-local el = dsp and "faust-editor" or "faust-editor-basic" 
-local passive = dsp and "" or "passive"
+local el = nodsp and "faust-editor-basic" or "faust-editor" 
 %>
 <h2><%= name %> - <i>posted <%= ago %></i>
-    <% if not dsp then %>
-    - <a href="/<%= shortid %>?dsp">Reopen with DSP</a>
+    <% if nodsp then %>
+    - <a href="/<%= shortid %>">Reopen with DSP</a>
     <% else %>
-    - <a href="/<%= shortid %>">Reopen without DSP</a>
+    - <a href="/<%= shortid %>?nodsp">Reopen without DSP</a>
     <% end %>
 </h2>
-    <!-- <%= passive %>  -->
-<<%= el %> id="code-editor" min-height='600px'>
+<<%= el %> id="code-editor" readonly min-height='600px'>
 <!--<%- content %>-->
 </<%= el %>>
 <br>
